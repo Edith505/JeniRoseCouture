@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
+use App\About\AboutContent;
 use App\Auth\AdminAccess;
 use App\Auth\AdminSession;
 use App\Catalog\Catalogue;
@@ -18,14 +19,14 @@ final class AdminController
     public function dispatch(string $route, string $method): void
     {
         header('Cache-Control: no-store');
-        header("Content-Security-Policy: default-src 'none'; style-src 'self'; font-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'");
+        header("Content-Security-Policy: default-src 'none'; style-src 'self'; font-src 'self'; img-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'");
         header('Referrer-Policy: no-referrer');
 
         $allowed = match ($route) {
             'admin-login' => ['GET', 'HEAD', 'POST'],
             'admin-logout' => ['POST'],
-            'admin', 'admin-catalogue' => ['GET', 'HEAD'],
-            'admin-prestation', 'admin-categorie' => ['GET', 'HEAD', 'POST'],
+            'admin', 'admin-catalogue', 'admin-a-propos-apercu', 'admin-a-propos-image' => ['GET', 'HEAD'],
+            'admin-prestation', 'admin-categorie', 'admin-a-propos', 'admin-a-propos-entree' => ['GET', 'HEAD', 'POST'],
         };
 
         if (!in_array($method, $allowed, true)) {
@@ -47,7 +48,9 @@ final class AdminController
                 'admin-login' => $this->login($method),
                 'admin-logout' => $this->logout(),
                 'admin' => $this->home($method),
-                'admin-catalogue', 'admin-prestation', 'admin-categorie' => $this->catalogue($route, $method),
+                'admin-catalogue', 'admin-prestation', 'admin-categorie',
+                'admin-a-propos', 'admin-a-propos-entree', 'admin-a-propos-apercu', 'admin-a-propos-image'
+                    => $this->feature($route, $method),
             };
         } catch (Throwable $error) {
             error_log('Erreur de l’administration : ' . $error::class);
@@ -117,12 +120,13 @@ final class AdminController
         if ($method === 'GET') {
             $csrf = AdminSession::token();
             $catalogueNavigation = $access->can($userId, 'catalog.manage');
+            $aboutNavigation = $access->can($userId, 'about.manage');
             $activeAdminPage = 'overview';
             require dirname(__DIR__) . '/Views/admin/home.php';
         }
     }
 
-    private function catalogue(string $route, string $method): void
+    private function feature(string $route, string $method): void
     {
         $userId = AdminSession::userId();
         if ($userId === null) {
@@ -133,16 +137,23 @@ final class AdminController
         $database = Connection::open();
         $access = new AdminAccess($database);
 
-        if (!$access->can($userId, 'admin.access') || !$access->can($userId, 'catalog.manage')) {
+        $about = str_starts_with($route, 'admin-a-propos');
+        $permission = $about ? 'about.manage' : 'catalog.manage';
+
+        if (!$access->can($userId, 'admin.access') || !$access->can($userId, $permission)) {
             http_response_code(403);
             if ($method !== 'HEAD') {
-                echo 'Accès au catalogue refusé.';
+                echo 'Accès à ce module refusé.';
             }
             return;
         }
 
         AdminSession::touch();
-        (new AdminCatalogueController(new Catalogue($database)))->dispatch($route, $method);
+        if ($about) {
+            (new AdminAboutController(new AboutContent($database)))->dispatch($route, $method, $access->can($userId, 'catalog.manage'));
+        } else {
+            (new AdminCatalogueController(new Catalogue($database)))->dispatch($route, $method, $access->can($userId, 'about.manage'));
+        }
     }
 
     private function logout(): void

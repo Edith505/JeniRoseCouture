@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
+use App\About\AboutContent;
 use App\Catalog\Catalogue;
 use App\Database\Connection;
 
@@ -29,6 +30,10 @@ final class PublicPagesController
             return $this->image((int) $match[1], $method);
         }
 
+        if (preg_match('~^/a-propos/photo/(portrait|[a-f0-9]{32})$~D', $path, $match) === 1) {
+            return $this->aboutImage($match[1], $method);
+        }
+
         $page = self::PAGES[$path] ?? null;
         if ($page === null) {
             return false;
@@ -48,7 +53,58 @@ final class PublicPagesController
             $title = $label . ' | Jeni Rose Couture';
             $activePage = $path;
             $contentView = dirname(__DIR__) . '/Views/pages' . $path . '.php';
+            if ($path === '/a-propos') {
+                $content = $this->aboutPage();
+                if ($content !== null) {
+                    $heading = $content['headline'];
+                    $contentView = dirname(__DIR__) . '/Views/partials/about-content.php';
+                }
+            }
             require dirname(__DIR__) . '/Views/partials/public-page.php';
+        }
+
+        return true;
+    }
+
+    private function aboutPage(): ?array
+    {
+        try {
+            return (new AboutContent(Connection::open()))->page('published');
+        } catch (\PDOException $error) {
+            if (($error->errorInfo[1] ?? null) === 1146) {
+                return null;
+            }
+            throw $error;
+        }
+    }
+
+    private function aboutImage(string $key, string $method): bool
+    {
+        if ($method !== 'GET' && $method !== 'HEAD') {
+            http_response_code(405);
+            header('Allow: GET, HEAD');
+            return true;
+        }
+
+        try {
+            $image = (new AboutContent(Connection::open()))->picture('published', $key);
+        } catch (\PDOException $error) {
+            if (($error->errorInfo[1] ?? null) === 1146) {
+                return false;
+            }
+            throw $error;
+        }
+
+        if ($image === null) {
+            return false;
+        }
+
+        header('Content-Type: image/webp');
+        header('Content-Length: ' . strlen($image));
+        header('X-Content-Type-Options: nosniff');
+        header('Cache-Control: no-cache');
+        if ($method === 'GET') {
+            echo $image;
         }
 
         return true;

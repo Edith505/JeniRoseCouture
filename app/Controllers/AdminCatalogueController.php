@@ -7,6 +7,7 @@ namespace App\Controllers;
 use App\Auth\AdminSession;
 use App\Catalog\Catalogue;
 use App\Catalog\CatalogueInput;
+use App\Media\WebpUpload;
 use DomainException;
 use PDOException;
 
@@ -16,7 +17,7 @@ final class AdminCatalogueController
     {
     }
 
-    public function dispatch(string $route, string $method): void
+    public function dispatch(string $route, string $method, bool $aboutNavigation): void
     {
         $catalogueNavigation = true;
         $activeAdminPage = 'catalogue';
@@ -65,7 +66,7 @@ final class AdminCatalogueController
                     if ($this->catalogue->category($fields['category_id']) === null) {
                         throw new DomainException('Choisissez une catégorie existante.');
                     }
-                    $image = CatalogueInput::image($_FILES['photo'] ?? null);
+                    $image = WebpUpload::fromRequest($_FILES['photo'] ?? null);
                     $remove = ($_POST['remove_image'] ?? '') === '1';
                     if ($remove && $image !== null) {
                         throw new DomainException('Choisissez entre supprimer la photo et la remplacer.');

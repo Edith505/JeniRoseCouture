@@ -13,7 +13,7 @@ MySQL 8.4 est le moteur de référence. Les tables utilisent InnoDB et utf8mb4. 
 | Devis | `quotes` référence le client. `quote_items` garde libellé, quantité et montant proposés. Les pièces jointes sont liées au devis par des métadonnées et stockées hors du dossier public. |
 | Commandes | `orders` référence le client et, si applicable, un devis accepté. L’identifiant du devis est unique dans les commandes afin qu’une nouvelle tentative ne crée pas de doublon. `order_items` conserve les prix et quantités convenus. |
 | Finances | `payments` référence la commande et conserve les encaissements et remboursements. `expenses` référence `expense_categories`. `invoices` référence la commande et `invoice_items` conserve les libellés et les montants émis. |
-| Contenu | `pages` stocke les versions de contenu éditorial et leur état de publication. `about_profiles` rattache `education_records`, `experience_records`, `skills` et `values`. `gallery_images`, `testimonials` et `faqs` ont un ordre d’affichage et un état de publication. |
+| Contenu | `pages` stocke les versions de contenu éditorial et leur état de publication. `about_profiles` détient les versions brouillon et publiée. `about_entries` rattache les formations, expériences, compétences, valeurs et photographies à chaque version par un type explicite. `gallery_images`, `testimonials` et `faqs` ont un ordre d’affichage et un état de publication. |
 | Suivi | `notifications` stocke événements, statut et tentatives de livraison. `audit_logs` journalise acteur, action et date sans conserver de secrets. |
 
 ## Transactions et index

@@ -38,3 +38,8 @@
 - Catalogue MySQL avec gestion des catégories, tarifs, statuts et photographies.
 - Fiches publiques par prestation et publication conditionnée par le statut de la catégorie et de la prestation.
 - Migration et seeder du catalogue local, avec nettoyage désactivé.
+
+## Phase 11
+
+- Ajout de l’éditeur À propos avec aperçu, ordre, visibilité et archivage.
+- Intégration du portrait dans l’initialisation locale, avec séparation du brouillon et de la version publiée.

@@ -453,3 +453,57 @@ button { cursor: pointer; }
 @media (max-width: 520px) {
     .catalogue-form-row { grid-template-columns: 1fr; }
 }
+
+.about-layout { display: grid; gap: clamp(1.5rem, 5vw, 4.5rem); align-items: start; }
+.about-with-portrait { grid-template-columns: minmax(0, .85fr) minmax(0, 1.45fr); }
+.about-portrait {
+    margin: 0;
+    padding: .7rem;
+    border-radius: .8rem;
+    background: #fce4ef;
+}
+.about-portrait img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: 50% 34%;
+    border-radius: .55rem;
+}
+.about-portrait figcaption { margin: 0; padding: .7rem .5rem .25rem; color: var(--ink); }
+.about-sections { min-width: 0; }
+.about-section + .about-section { margin-top: clamp(1.4rem, 4vw, 2.65rem); }
+.about-section h2 { font-size: clamp(1.85rem, 3.7vw, 3rem); letter-spacing: -.04em; }
+.about-section p { color: var(--muted); overflow-wrap: anywhere; }
+.about-entries {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .7rem;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+.about-entries li { padding: 1rem; border-radius: .55rem; background: #f8edf8; overflow-wrap: anywhere; }
+.about-entries li:nth-child(even) { background: #eaf4fe; }
+.about-entries h3 { margin-bottom: .25rem; font-size: 1.18rem; }
+.about-entries p { margin-block: .55rem 0; }
+.about-meta { font-size: .85rem; }
+.about-entries img { display: block; width: 100%; max-height: 20rem; object-fit: cover; border-radius: .4rem; margin-bottom: .7rem; }
+.about-section blockquote { margin: 0; padding: 1rem 1.25rem; border-left: 3px solid var(--accent); background: #fce4ef; font-family: var(--display); }
+.about-demo { padding: .8rem 1rem; border: 1px solid #e5a0bf; border-radius: .4rem; background: #fce4ef; color: #702341; }
+.about-preview { padding: clamp(1rem, 4vw, 2.5rem); background: var(--paper); border: 1px solid var(--rule); border-radius: .6rem; }
+.about-preview > header { margin-bottom: 1rem; }
+.about-preview > header h2 { font-size: clamp(1.8rem, 4.3vw, 3.1rem); }
+.about-settings { min-width: 0; padding: .75rem 1rem; margin: 0; border: 1px solid var(--rule); }
+.about-settings legend { padding-inline: .45rem; font-weight: 700; }
+.about-setting { display: grid; grid-template-columns: minmax(0, 1fr) 6rem; gap: .6rem; align-items: center; padding-block: .45rem; }
+.about-setting + .about-setting { border-top: 1px solid var(--rule); }
+
+@media (max-width: 800px) {
+    .about-with-portrait { grid-template-columns: minmax(0, 1fr); }
+    .about-portrait { width: min(100%, 28rem); }
+}
+
+@media (max-width: 460px) {
+    .about-entries { grid-template-columns: 1fr; }
+}

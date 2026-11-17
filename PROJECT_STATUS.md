@@ -53,3 +53,9 @@
 - Vérifications locales avant migration : affichage des six exemples, fiches individuelles, prix de démonstration, nettoyage absent du catalogue, contrôle d’accès et CSRF.
 - Migration 003 appliquée. Création, modification, publication, téléversement WebP, rejet d’un fichier texte, masquage par catégorie et archivage vérifiés via Apache. La prestation de test et sa catégorie ont été retirées après les essais.
 - Le seeder a été relancé sans modifier les entrées existantes. Les formulaires d’administration et la fiche publique ont été vérifiés dans Chrome à 320, 768 et 1440 px.
+
+## Phase 11 vérifiée en local
+
+- Éditeur, aperçu privé, publication transactionnelle et gestion des photographies développés.
+- Portrait optimisé et conservé hors du dépôt. Biographie et parcours fictifs disponibles dans le brouillon après initialisation.
+- Migration 004 appliquée. Portrait publié, aperçu privé, téléversement, archivage, restauration et séparation du brouillon ont été vérifiés via Apache. Le refus de publier une biographie fictive en mode production a été vérifié.

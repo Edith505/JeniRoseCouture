@@ -101,3 +101,17 @@ Le seeder conserve les entrées déjà présentes et n’active pas le nettoyage
 Les photographies envoyées par l’administration sont redimensionnées et réencodées en WebP dans MySQL. L’image d’une prestation masquée ou archivée cesse d’être servie par la route publique du catalogue. Les fichiers d’illustration livrés avec le projet sont des ressources statiques.
 
 Définir `APP_ENV=local` dans le fichier `.env` du poste de développement. Ce réglage permet l’aperçu avant migration et l’affichage des montants de démonstration. Ne pas exécuter le seeder d’exemple sur une base de production. En production, utiliser `APP_ENV=production` et saisir le catalogue confirmé.
+
+## Page À propos
+
+Après la phase catalogue, appliquer la migration et la permission du module :
+
+```sh
+sudo mysql jeni_rose_couture < database/migrations/004_a_propos.sql &&
+sudo mysql jeni_rose_couture < database/seeders/004_permissions_a_propos.sql &&
+php bin/seed-about.php
+```
+
+La dernière commande initialise uniquement l’environnement local. Si `storage/local/portrait-jeni-rose.webp` est présent, il devient le portrait initial. Ce fichier est ignoré par Git. Vous pouvez également ajouter le portrait depuis l’éditeur. Les exemples fictifs sont placés dans le brouillon.
+
+Dans **Administration > Contenu du site · À propos**, enregistrer le brouillon, vérifier l’aperçu, puis publier. Les sections et leurs entrées ont des ordres indépendants. L’archivage d’une entrée modifie le brouillon. La page publique conserve sa dernière version jusqu’à la publication suivante. En production, le module refuse la publication d’une biographie ou d’entrées visibles signalées comme fictives.

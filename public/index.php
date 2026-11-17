@@ -36,7 +36,10 @@ if ($path !== '/' && $path !== '/index.php') {
 }
 
 $route = $_GET['route'] ?? null;
-if (in_array($route, ['admin', 'admin-login', 'admin-logout', 'admin-catalogue', 'admin-prestation', 'admin-categorie'], true)) {
+if (in_array($route, [
+    'admin', 'admin-login', 'admin-logout', 'admin-catalogue', 'admin-prestation', 'admin-categorie',
+    'admin-a-propos', 'admin-a-propos-entree', 'admin-a-propos-apercu', 'admin-a-propos-image',
+], true)) {
     (new AdminController())->dispatch($route, $method);
     return;
 }
