@@ -16,3 +16,9 @@
 
 - Dépendances installées et exigences de plateforme vérifiées sous PHP 8.5.4.
 - Accueil vérifié via Apache après le passage à l’autoload Composer.
+
+## Phase 6 vérifiée
+
+- Modèle relationnel documenté dans `docs/modele-relationnel.md`.
+- Migration 001 appliquée sans erreur sur la base MySQL de test selon le retour utilisateur. Les trois rôles attendus apparaissent après deux exécutions du seeder.
+- Les migrations métier seront ajoutées avec les modules qui les utilisent.

@@ -9,3 +9,8 @@
 
 - Ajout de l’autoload PSR-4 et du verrou Composer.
 - Ajout de la configuration locale via `.env` et d’un contrôle PDO en ligne de commande.
+
+## Phase 6
+
+- Documentation du modèle relationnel et des transactions métier.
+- Ajout de la migration initiale des comptes et des permissions et du seeder des rôles.
