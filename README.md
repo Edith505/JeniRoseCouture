@@ -73,6 +73,15 @@ La session expire après 30 minutes d’inactivité ou 8 heures au total. Le for
 
 ## Gabarits et ressources visuelles
 
-Les éléments partagés sont dans `app/Views/partials/`. La charte et les adaptations responsive sont dans `public/assets/css/atelier.css`. Bootstrap 5.3.8 et les fichiers des polices sont servis par Apache avec leurs licences dans `public/assets/`.
+Les éléments partagés sont dans `app/Views/partials/`. La charte et les adaptations responsive sont dans `public/assets/css/atelier.css`. Les gabarits utilisent la feuille de style du projet. Les polices Inter et Playfair Display sont servies par Apache avec leurs licences dans `public/assets/fonts/`.
 
 La photographie du bandeau est un visuel d’ambiance généré. Pour la remplacer, mettre à jour les deux fichiers WebP du bandeau et, si nécessaire, les dimensions et le texte alternatif dans `app/Views/home.php`.
+
+## Pages publiques
+
+L’accueil et les pages publiques sont accessibles sur le VirtualHost local. Les pages secondaires utilisent des chemins sous `/index.php/`, compatibles avec la configuration Apache déjà en place. Les textes et tarifs d’exemple partagent une seule source temporaire avant le catalogue administrable.
+
+Les visuels de la galerie et des cartes de prestations sont des illustrations générées. Les cartes utilisent des WebP de 480 × 360 px. La page Contact attend des coordonnées confirmées et les formulaires seront raccordés à la phase prévue. Avant la mise en ligne, compléter les mentions légales à partir des informations de l’éditeur et de l’hébergeur, puis la politique de confidentialité à partir des traitements réellement activés.
+
+- [Mentions obligatoires sur un site professionnel](https://entreprendre.service-public.gouv.fr/vosdroits/F37351?lang=fr)
+- [Information des personnes et transparence selon la CNIL](https://www.cnil.fr/fr/conformite-rgpd-information-des-personnes-et-transparence)

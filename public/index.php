@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Controllers\AdminController;
 use App\Controllers\HomeController;
+use App\Controllers\PublicPagesController;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
@@ -11,6 +12,16 @@ $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 header('Content-Type: text/html; charset=UTF-8');
+
+if (is_string($path) && str_starts_with($path, '/index.php/')) {
+    $path = substr($path, strlen('/index.php'));
+}
+
+if (is_string($path) && $path !== '/' && $path !== '/index.php'
+    && (new PublicPagesController())->dispatch($path, $method)
+) {
+    return;
+}
 
 if ($path !== '/' && $path !== '/index.php') {
     http_response_code(404);

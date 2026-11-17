@@ -21,11 +21,11 @@ require dirname(__DIR__) . '/partials/document-start.php';
             <input type="hidden" name="csrf" value="<?= htmlspecialchars($csrf, ENT_QUOTES, 'UTF-8') ?>">
             <div>
                 <label for="email">Adresse e-mail</label>
-                <input class="form-control" id="email" name="email" type="email" autocomplete="username" maxlength="254" required>
+                <input class="field-input" id="email" name="email" type="email" autocomplete="username" maxlength="254" required>
             </div>
             <div>
                 <label for="password">Mot de passe</label>
-                <input class="form-control" id="password" name="password" type="password" autocomplete="current-password" required>
+                <input class="field-input" id="password" name="password" type="password" autocomplete="current-password" required>
             </div>
             <button class="action action-primary" type="submit">Se connecter</button>
         </form>

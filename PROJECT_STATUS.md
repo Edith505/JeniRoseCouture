@@ -36,3 +36,13 @@
 - Bootstrap 5.3.8 et polices Inter et Playfair Display servis localement. La photographie d’ambiance de l’accueil est une illustration originale générée, optimisée en WebP pour deux tailles d’écran.
 - Contrôles sous Chrome à 320, 768 et 1440 px : absence de défilement horizontal, chargement des polices, choix du bon fichier image, connexion et déconnexion.
 - La navigation publique renvoie aux sections disponibles. Les pages publiques détaillées et les modules du tableau de bord seront introduits dans leurs phases.
+
+## Phase 9 validée
+
+- Accueil et huit pages publiques disponibles avec le gabarit partagé et la navigation fonctionnelle.
+- Tarifs identifiés comme démonstration. Galerie composée de visuels d’illustration.
+- Coordonnées et mentions de publication à compléter après confirmation. Réservations et devis restent prévus à la phase 12.
+- Réponses HTTP, ressources et accès anonyme à l’administration vérifiés via Apache.
+- Les neuf pages ont été contrôlées dans Chrome à 320, 768 et 1440 px. Les images de la galerie se chargent et les questions de la FAQ s’ouvrent avec Entrée.
+- Affinage du design effectué avant validation de la phase 9. Bootstrap n’est plus chargé. Les neuf pages publiques et le formulaire de connexion ont été vérifiés sous Chrome à 320, 390, 768 et 1440 px avec les nouveaux styles.
+- Nouvelle variante visuelle intégrée à la phase 9. Accueil, pages publiques et formulaire vérifiés sous Chrome aux quatre largeurs prévues. Contraste des accents, boutons et textes de pied de page contrôlé.
