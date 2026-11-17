@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Controllers\HomeController;
 
-require dirname(__DIR__) . '/app/Controllers/HomeController.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
 
 $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';

@@ -8,7 +8,7 @@ Application PHP pour le site public et la gestion privée de Jeni Rose Couture.
 
 Le poste de développement utilise Ubuntu 26.04, Apache et PHP 8.5. La cible de compatibilité est PHP 8.3.
 
-Sur le poste configuré, ouvrir http://jeni-rose-couture.local/. Le VirtualHost Apache doit pointer vers le dossier `public/`. Cette étape affiche une page d’accueil minimale sans utiliser la base de données.
+Exécuter `composer install` depuis la racine du projet, puis ouvrir http://jeni-rose-couture.local/. Le VirtualHost Apache doit pointer vers le dossier `public/`. Cette étape affiche une page d’accueil minimale sans utiliser la base de données.
 
 Pour un contrôle sans Apache, exécuter depuis la racine du projet :
 
@@ -24,3 +24,15 @@ Ouvrir ensuite http://127.0.0.1:8080/. Ce serveur est réservé au développemen
 - `app/Controllers/` contient les contrôleurs.
 - `app/Views/` contient les gabarits HTML.
 - Les modèles seront introduits avec les premiers besoins de persistance.
+
+## Base MySQL locale
+
+Copier `.env.example` vers `.env`, réserver le fichier à votre utilisateur et compléter `DB_PASSWORD` avec le mot de passe du compte applicatif local.
+
+```sh
+cp -n .env.example .env
+chmod 600 .env
+php bin/check-db.php
+```
+
+Le résultat attendu est `Connexion PDO : 1`. Ne pas ajouter `.env` au dépôt. L’accueil reste accessible sans base et le contrôle PDO s’exécute en ligne de commande.
