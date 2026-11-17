@@ -17,7 +17,7 @@ final class AdminController
     public function dispatch(string $route, string $method): void
     {
         header('Cache-Control: no-store');
-        header("Content-Security-Policy: default-src 'none'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'");
+        header("Content-Security-Policy: default-src 'none'; style-src 'self'; font-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'");
         header('Referrer-Policy: no-referrer');
 
         $allowed = match ($route) {

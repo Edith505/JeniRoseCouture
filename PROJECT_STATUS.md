@@ -29,3 +29,10 @@
 - Vérifié via Apache : accueil public, formulaire, redirection pour les visiteurs, rejet d’un formulaire sans jeton, refus de la déconnexion par GET et en-têtes de session et de cache.
 - Les migrations et la création du premier compte ont été vérifiées par son accès aux pages protégées via Apache. Les identifiants de session changent à la connexion et à la déconnexion. Une ancienne session est refusée après déconnexion. Le rejet des identifiants inconnus et la limitation des tentatives ont été vérifiés sur la base locale.
 - La réinitialisation du mot de passe par e-mail dépendra du module de notifications.
+
+## Phase 8 validée
+
+- Gabarits adaptatifs pour l’accueil, la connexion, l’administration et les erreurs publiques.
+- Bootstrap 5.3.8 et polices Inter et Playfair Display servis localement. La photographie d’ambiance de l’accueil est une illustration originale générée, optimisée en WebP pour deux tailles d’écran.
+- Contrôles sous Chrome à 320, 768 et 1440 px : absence de défilement horizontal, chargement des polices, choix du bon fichier image, connexion et déconnexion.
+- La navigation publique renvoie aux sections disponibles. Les pages publiques détaillées et les modules du tableau de bord seront introduits dans leurs phases.

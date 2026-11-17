@@ -70,3 +70,9 @@ Choisir une adresse et un mot de passe propres au compte d’administration. Le 
 Ouvrir http://jeni-rose-couture.local/index.php?route=admin-login. Vérifier qu’un accès direct à l’administration redirige vers le formulaire avant la connexion, que la connexion ouvre l’administration et que la déconnexion redirige vers le formulaire.
 
 La session expire après 30 minutes d’inactivité ou 8 heures au total. Le formulaire limite les tentatives à 10 par adresse réseau sur 15 minutes. Le rôle admin reçoit la permission `admin.access`. L’attribution des permissions aux autres rôles se fera avec leurs fonctionnalités. En hébergement, configurer Apache pour servir l’administration en HTTPS et prévoir une purge périodique des compteurs anciens.
+
+## Gabarits et ressources visuelles
+
+Les éléments partagés sont dans `app/Views/partials/`. La charte et les adaptations responsive sont dans `public/assets/css/atelier.css`. Bootstrap 5.3.8 et les fichiers des polices sont servis par Apache avec leurs licences dans `public/assets/`.
+
+La photographie du bandeau est un visuel d’ambiance généré. Pour la remplacer, mettre à jour les deux fichiers WebP du bandeau et, si nécessaire, les dimensions et le texte alternatif dans `app/Views/home.php`.

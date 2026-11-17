@@ -19,3 +19,8 @@
 
 - Ajout du formulaire de connexion, de la déconnexion et du contrôle des permissions.
 - Ajout de la migration de limitation des tentatives et du script de création du premier compte administrateur.
+
+## Phase 8
+
+- Ajout de la charte et des gabarits PHP partagés pour le site et l’administration.
+- Ajout d’une photographie d’ambiance optimisée et de ressources de style servies localement.
