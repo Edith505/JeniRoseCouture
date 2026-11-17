@@ -6,6 +6,7 @@ namespace App\Controllers;
 
 use App\Auth\AdminAccess;
 use App\Auth\AdminSession;
+use App\Catalog\Catalogue;
 use App\Database\Connection;
 use Throwable;
 
@@ -23,7 +24,8 @@ final class AdminController
         $allowed = match ($route) {
             'admin-login' => ['GET', 'HEAD', 'POST'],
             'admin-logout' => ['POST'],
-            'admin' => ['GET', 'HEAD'],
+            'admin', 'admin-catalogue' => ['GET', 'HEAD'],
+            'admin-prestation', 'admin-categorie' => ['GET', 'HEAD', 'POST'],
         };
 
         if (!in_array($method, $allowed, true)) {
@@ -45,6 +47,7 @@ final class AdminController
                 'admin-login' => $this->login($method),
                 'admin-logout' => $this->logout(),
                 'admin' => $this->home($method),
+                'admin-catalogue', 'admin-prestation', 'admin-categorie' => $this->catalogue($route, $method),
             };
         } catch (Throwable $error) {
             error_log('Erreur de l’administration : ' . $error::class);
@@ -103,7 +106,8 @@ final class AdminController
             return;
         }
 
-        if (!(new AdminAccess(Connection::open()))->can($userId, 'admin.access')) {
+        $access = new AdminAccess(Connection::open());
+        if (!$access->can($userId, 'admin.access')) {
             AdminSession::clear();
             self::redirect(self::LOGIN);
             return;
@@ -112,8 +116,33 @@ final class AdminController
         AdminSession::touch();
         if ($method === 'GET') {
             $csrf = AdminSession::token();
+            $catalogueNavigation = $access->can($userId, 'catalog.manage');
+            $activeAdminPage = 'overview';
             require dirname(__DIR__) . '/Views/admin/home.php';
         }
+    }
+
+    private function catalogue(string $route, string $method): void
+    {
+        $userId = AdminSession::userId();
+        if ($userId === null) {
+            self::redirect(self::LOGIN);
+            return;
+        }
+
+        $database = Connection::open();
+        $access = new AdminAccess($database);
+
+        if (!$access->can($userId, 'admin.access') || !$access->can($userId, 'catalog.manage')) {
+            http_response_code(403);
+            if ($method !== 'HEAD') {
+                echo 'Accès au catalogue refusé.';
+            }
+            return;
+        }
+
+        AdminSession::touch();
+        (new AdminCatalogueController(new Catalogue($database)))->dispatch($route, $method);
     }
 
     private function logout(): void

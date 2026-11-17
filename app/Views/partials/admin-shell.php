@@ -6,7 +6,10 @@ require __DIR__ . '/document-start.php';
     <aside class="admin-sidebar">
         <?php require __DIR__ . '/brand.php'; ?>
         <nav aria-label="Navigation de l’administration">
-            <a class="admin-nav-current" href="/index.php?route=admin" aria-current="page">Vue d’ensemble</a>
+            <a href="/index.php?route=admin" <?= ($activeAdminPage ?? '') === 'overview' ? 'aria-current="page"' : '' ?>>Vue d’ensemble</a>
+            <?php if ($catalogueNavigation ?? false): ?>
+                <a href="/index.php?route=admin-catalogue" <?= ($activeAdminPage ?? '') === 'catalogue' ? 'aria-current="page"' : '' ?>>Prestations et tarifs</a>
+            <?php endif; ?>
         </nav>
     </aside>
     <div class="admin-content">

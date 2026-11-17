@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
+use App\Catalog\Catalogue;
+use App\Database\Connection;
+
 final class PublicPagesController
 {
     private const PAGES = [
@@ -19,6 +22,13 @@ final class PublicPagesController
 
     public function dispatch(string $path, string $method): bool
     {
+        if (preg_match('~^/prestations/([a-z0-9-]{1,140})$~D', $path, $match) === 1) {
+            return $this->service($match[1], $method);
+        }
+        if (preg_match('~^/prestations-image/([1-9][0-9]{0,17})$~D', $path, $match) === 1) {
+            return $this->image((int) $match[1], $method);
+        }
+
         $page = self::PAGES[$path] ?? null;
         if ($page === null) {
             return false;
@@ -32,10 +42,62 @@ final class PublicPagesController
 
         if ($method === 'GET') {
             [$label, $heading, $intro] = $page;
+            if ($path === '/prestations' || $path === '/tarifs') {
+                $services = Catalogue::published();
+            }
             $title = $label . ' | Jeni Rose Couture';
             $activePage = $path;
             $contentView = dirname(__DIR__) . '/Views/pages' . $path . '.php';
             require dirname(__DIR__) . '/Views/partials/public-page.php';
+        }
+
+        return true;
+    }
+
+    private function service(string $slug, string $method): bool
+    {
+        $service = Catalogue::published($slug)[0] ?? null;
+        if ($service === null) {
+            return false;
+        }
+
+        if ($method !== 'GET' && $method !== 'HEAD') {
+            http_response_code(405);
+            header('Allow: GET, HEAD');
+            return true;
+        }
+
+        if ($method === 'GET') {
+            $title = $service['name'] . ' | Jeni Rose Couture';
+            $heading = $service['name'];
+            $intro = $service['description'];
+            $activePage = '/prestations';
+            $contentView = dirname(__DIR__) . '/Views/pages/detail-prestation.php';
+            require dirname(__DIR__) . '/Views/partials/public-page.php';
+        }
+
+        return true;
+    }
+
+    private function image(int $id, string $method): bool
+    {
+        if ($method !== 'GET' && $method !== 'HEAD') {
+            http_response_code(405);
+            header('Allow: GET, HEAD');
+            return true;
+        }
+
+        $image = (new Catalogue(Connection::open()))->publicImage($id);
+        if ($image === null) {
+            return false;
+        }
+
+        header('Content-Type: image/webp');
+        header('Content-Length: ' . strlen($image));
+        header('X-Content-Type-Options: nosniff');
+        header('Cache-Control: no-cache');
+        if ($method === 'GET') {
+            echo $image;
         }
 
         return true;

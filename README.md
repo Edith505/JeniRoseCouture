@@ -85,3 +85,19 @@ Les visuels de la galerie et des cartes de prestations sont des illustrations g�
 
 - [Mentions obligatoires sur un site professionnel](https://entreprendre.service-public.gouv.fr/vosdroits/F37351?lang=fr)
 - [Information des personnes et transparence selon la CNIL](https://www.cnil.fr/fr/conformite-rgpd-information-des-personnes-et-transparence)
+
+## Catalogue administrable
+
+Pour un environnement local où les migrations 001 et 002 sont déjà appliquées, ajouter la migration et les permissions du catalogue, puis initialiser les données d’exemple.
+
+```sh
+sudo mysql jeni_rose_couture < database/migrations/003_catalogue.sql &&
+sudo mysql jeni_rose_couture < database/seeders/003_permissions_catalogue.sql &&
+php bin/seed-catalogue.php
+```
+
+Le seeder conserve les entrées déjà présentes et n’active pas le nettoyage. Depuis le tableau de bord, ouvrir **Prestations et tarifs**. La permission `catalog.manage` permet de gérer les catégories et les prestations. Masquer une catégorie retire ses prestations du site. Archiver une prestation la conserve dans la base.
+
+Les photographies envoyées par l’administration sont redimensionnées et réencodées en WebP dans MySQL. L’image d’une prestation masquée ou archivée cesse d’être servie par la route publique du catalogue. Les fichiers d’illustration livrés avec le projet sont des ressources statiques.
+
+Définir `APP_ENV=local` dans le fichier `.env` du poste de développement. Ce réglage permet l’aperçu avant migration et l’affichage des montants de démonstration. Ne pas exécuter le seeder d’exemple sur une base de production. En production, utiliser `APP_ENV=production` et saisir le catalogue confirmé.

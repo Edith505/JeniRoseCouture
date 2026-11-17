@@ -32,3 +32,9 @@
 - Ajout d’une navigation publique commune et de deux illustrations WebP pour la galerie.
 - Affinage de la direction éditoriale de l’accueil, ajout de six illustrations de prestations et passage à une feuille de style autonome.
 - Ajustement de la palette selon la nouvelle maquette. Rose plus vif, cartes lilas et bleu poudré, photographie lumineuse et pied de page bleu nuit.
+
+## Phase 10
+
+- Catalogue MySQL avec gestion des catégories, tarifs, statuts et photographies.
+- Fiches publiques par prestation et publication conditionnée par le statut de la catégorie et de la prestation.
+- Migration et seeder du catalogue local, avec nettoyage désactivé.

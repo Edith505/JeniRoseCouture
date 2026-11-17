@@ -46,3 +46,10 @@
 - Les neuf pages ont été contrôlées dans Chrome à 320, 768 et 1440 px. Les images de la galerie se chargent et les questions de la FAQ s’ouvrent avec Entrée.
 - Affinage du design effectué avant validation de la phase 9. Bootstrap n’est plus chargé. Les neuf pages publiques et le formulaire de connexion ont été vérifiés sous Chrome à 320, 390, 768 et 1440 px avec les nouveaux styles.
 - Nouvelle variante visuelle intégrée à la phase 9. Accueil, pages publiques et formulaire vérifiés sous Chrome aux quatre largeurs prévues. Contraste des accents, boutons et textes de pied de page contrôlé.
+
+## Phase 10 vérifiée en local
+
+- Catalogue MySQL, formulaire de gestion, permission `catalog.manage` et fiches publiques réalisés.
+- Vérifications locales avant migration : affichage des six exemples, fiches individuelles, prix de démonstration, nettoyage absent du catalogue, contrôle d’accès et CSRF.
+- Migration 003 appliquée. Création, modification, publication, téléversement WebP, rejet d’un fichier texte, masquage par catégorie et archivage vérifiés via Apache. La prestation de test et sa catégorie ont été retirées après les essais.
+- Le seeder a été relancé sans modifier les entrées existantes. Les formulaires d’administration et la fiche publique ont été vérifiés dans Chrome à 320, 768 et 1440 px.
