@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Controllers\AdminController;
 use App\Controllers\HomeController;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
@@ -16,6 +17,12 @@ if ($path !== '/' && $path !== '/index.php') {
     if ($method !== 'HEAD') {
         require dirname(__DIR__) . '/app/Views/not-found.php';
     }
+    return;
+}
+
+$route = $_GET['route'] ?? null;
+if (in_array($route, ['admin', 'admin-login', 'admin-logout'], true)) {
+    (new AdminController())->dispatch($route, $method);
     return;
 }
 

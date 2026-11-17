@@ -14,3 +14,8 @@
 
 - Documentation du modèle relationnel et des transactions métier.
 - Ajout de la migration initiale des comptes et des permissions et du seeder des rôles.
+
+## Phase 7
+
+- Ajout du formulaire de connexion, de la déconnexion et du contrôle des permissions.
+- Ajout de la migration de limitation des tentatives et du script de création du premier compte administrateur.

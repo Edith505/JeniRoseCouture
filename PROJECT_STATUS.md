@@ -22,3 +22,10 @@
 - Modèle relationnel documenté dans `docs/modele-relationnel.md`.
 - Migration 001 appliquée sans erreur sur la base MySQL de test selon le retour utilisateur. Les trois rôles attendus apparaissent après deux exécutions du seeder.
 - Les migrations métier seront ajoutées avec les modules qui les utilisent.
+
+## Phase 7 vérifiée en local
+
+- Authentification, permission `admin.access`, sessions, CSRF et limitation des tentatives implémentés.
+- Vérifié via Apache : accueil public, formulaire, redirection pour les visiteurs, rejet d’un formulaire sans jeton, refus de la déconnexion par GET et en-têtes de session et de cache.
+- Les migrations et la création du premier compte ont été vérifiées par son accès aux pages protégées via Apache. Les identifiants de session changent à la connexion et à la déconnexion. Une ancienne session est refusée après déconnexion. Le rejet des identifiants inconnus et la limitation des tentatives ont été vérifiés sur la base locale.
+- La réinitialisation du mot de passe par e-mail dépendra du module de notifications.

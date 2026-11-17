@@ -36,3 +36,37 @@ php bin/check-db.php
 ```
 
 Le résultat attendu est `Connexion PDO : 1`. Ne pas ajouter `.env` au dépôt. L’accueil reste accessible sans base et le contrôle PDO s’exécute en ligne de commande.
+
+## Administration locale
+
+Appliquer les migrations dans l’ordre avec le compte de migration. Sur une base neuve, appliquer également les seeders dans l’ordre. La migration 001 a été vérifiée dans une base dédiée. Les commandes suivantes ciblent la base de développement `jeni_rose_couture` et supposent que les deux migrations y sont encore absentes.
+
+```sh
+sudo mysql jeni_rose_couture < database/migrations/001_comptes_et_permissions.sql &&
+sudo mysql jeni_rose_couture < database/seeders/001_roles.sql &&
+sudo mysql jeni_rose_couture < database/migrations/002_limitation_connexions.sql &&
+sudo mysql jeni_rose_couture < database/seeders/002_permissions_administration.sql
+```
+
+Donner à Apache la lecture du fichier `.env` hors de `public/`. L’ACL cible son compte système uniquement.
+
+```sh
+sudo setfacl -m u:www-data:r-- .env
+sudo -u www-data test -r .env
+```
+
+Choisir une adresse et un mot de passe propres au compte d’administration. Le mot de passe est saisi sans écho et transmis à PHP via l’entrée standard. Utiliser une phrase de passe de 14 à 72 octets.
+
+```bash
+(
+  read -rp 'Adresse e-mail administrateur : ' email_admin
+  read -rsp 'Mot de passe administrateur : ' mot_de_passe_admin
+  printf '\n'
+  printf '%s\n' "$mot_de_passe_admin" |
+    php bin/create-admin.php "$email_admin" 'Administrateur'
+)
+```
+
+Ouvrir http://jeni-rose-couture.local/index.php?route=admin-login. Vérifier qu’un accès direct à l’administration redirige vers le formulaire avant la connexion, que la connexion ouvre l’administration et que la déconnexion redirige vers le formulaire.
+
+La session expire après 30 minutes d’inactivité ou 8 heures au total. Le formulaire limite les tentatives à 10 par adresse réseau sur 15 minutes. Le rôle admin reçoit la permission `admin.access`. L’attribution des permissions aux autres rôles se fera avec leurs fonctionnalités. En hébergement, configurer Apache pour servir l’administration en HTTPS et prévoir une purge périodique des compteurs anciens.
