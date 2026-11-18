@@ -1,5 +1,5 @@
 <div class="prose">
     <h2>Navigation et session</h2>
-    <p>Cette version locale ne comporte aucun formulaire public de réservation, de devis ou de contact. Le formulaire de connexion au tableau de bord utilise un cookie de session pour protéger l’accès à l’espace privé.</p>
+    <p>Les formulaires de rendez-vous et de devis enregistrent vos coordonnées, les informations de votre demande et les photos que vous choisissez de joindre. Seuls les membres autorisés de l’équipe peuvent consulter ces éléments. Des cookies de session protégés permettent de sécuriser les formulaires et l’accès à l’administration.</p>
     <p>La politique de confidentialité sera complétée avant la mise en ligne à partir des traitements effectivement mis en service.</p>
 </div>

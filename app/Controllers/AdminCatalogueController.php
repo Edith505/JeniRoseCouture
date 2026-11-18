@@ -17,7 +17,7 @@ final class AdminCatalogueController
     {
     }
 
-    public function dispatch(string $route, string $method, bool $aboutNavigation): void
+    public function dispatch(string $route, string $method, bool $aboutNavigation, bool $requestNavigation): void
     {
         $catalogueNavigation = true;
         $activeAdminPage = 'catalogue';

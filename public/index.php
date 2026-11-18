@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Controllers\AdminController;
 use App\Controllers\HomeController;
 use App\Controllers\PublicPagesController;
+use App\Controllers\PublicRequestsController;
 use Dotenv\Exception\ExceptionInterface;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
@@ -20,6 +21,10 @@ if (is_string($path) && str_starts_with($path, '/index.php/')) {
 
 if ($path !== '/' && $path !== '/index.php') {
     try {
+        if (in_array($path, ['/reservation', '/devis'], true)) {
+            (new PublicRequestsController())->dispatch($path, $method);
+            return;
+        }
         if (is_string($path) && (new PublicPagesController())->dispatch($path, $method)) {
             return;
         }
@@ -38,7 +43,7 @@ if ($path !== '/' && $path !== '/index.php') {
 $route = $_GET['route'] ?? null;
 if (in_array($route, [
     'admin', 'admin-login', 'admin-logout', 'admin-catalogue', 'admin-prestation', 'admin-categorie',
-    'admin-a-propos', 'admin-a-propos-entree', 'admin-a-propos-apercu', 'admin-a-propos-image',
+    'admin-a-propos', 'admin-a-propos-entree', 'admin-a-propos-apercu', 'admin-a-propos-image', 'admin-demandes',
 ], true)) {
     (new AdminController())->dispatch($route, $method);
     return;
@@ -60,11 +65,11 @@ if ($method === 'GET') {
 
 function publicUnavailable(string $method, Throwable $error): void
 {
-    error_log('Erreur du catalogue public : ' . $error::class);
+    error_log('Erreur du site public : ' . $error::class);
     http_response_code(503);
     header('Cache-Control: no-store');
 
     if ($method !== 'HEAD') {
-        echo 'Le catalogue est temporairement indisponible.';
+        echo 'Cette page est temporairement indisponible.';
     }
 }

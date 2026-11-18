@@ -43,3 +43,9 @@
 
 - Ajout de l’éditeur À propos avec aperçu, ordre, visibilité et archivage.
 - Intégration du portrait dans l’initialisation locale, avec séparation du brouillon et de la version publiée.
+
+## Phase 12
+
+- Ajout de la réservation automatique avec récapitulatif et des demandes de rendez-vous.
+- Ajout des créneaux administrables, des répétitions hebdomadaires, des fermetures et de l’historique des rendez-vous.
+- Ajout du dépôt de devis avec photographies privées ainsi que du suivi du montant, de la réponse et du statut.

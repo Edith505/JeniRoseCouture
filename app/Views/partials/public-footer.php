@@ -10,6 +10,7 @@
             <a href="/index.php/galerie">Galerie</a>
         </nav>
         <nav class="footer-nav" aria-label="Informations pratiques">
+            <a href="/index.php/devis">Demander un devis</a>
             <a href="/index.php/contact">Contact</a>
             <a href="/index.php/faq">FAQ</a>
             <a href="/index.php/mentions-legales">Mentions légales</a>

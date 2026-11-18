@@ -115,3 +115,18 @@ php bin/seed-about.php
 La dernière commande initialise uniquement l’environnement local. Si `storage/local/portrait-jeni-rose.webp` est présent, il devient le portrait initial. Ce fichier est ignoré par Git. Vous pouvez également ajouter le portrait depuis l’éditeur. Les exemples fictifs sont placés dans le brouillon.
 
 Dans **Administration > Contenu du site · À propos**, enregistrer le brouillon, vérifier l’aperçu, puis publier. Les sections et leurs entrées ont des ordres indépendants. L’archivage d’une entrée modifie le brouillon. La page publique conserve sa dernière version jusqu’à la publication suivante. En production, le module refuse la publication d’une biographie ou d’entrées visibles signalées comme fictives.
+
+## Rendez-vous et devis
+
+Appliquer la migration et le seeder de permissions après la phase À propos.
+
+```sh
+sudo mysql jeni_rose_couture < database/migrations/005_reservations_devis.sql &&
+sudo mysql jeni_rose_couture < database/seeders/005_permissions_demandes.sql
+```
+
+- **Site public.** `/index.php/reservation` propose une demande de rendez-vous et une réservation automatique avec récapitulatif. `/index.php/devis` enregistre le projet, les préférences de contact et jusqu’à trois photographies. Les photos sont réencodées en WebP et servies uniquement dans l’administration.
+- **Disponibilités.** Dans **Rendez-vous et devis > Créneaux**, créer les créneaux en heure de Paris, avec une personne, un atelier ou une zone d’intervention. La réservation automatique nécessite une durée et un mode de prestation configurés dans le catalogue. Un créneau couvre un seul rendez-vous et peut être répété jusqu’à douze semaines.
+- **Fermetures.** Fermer un créneau ou les créneaux d’une journée pour une ou toutes les personnes. Les rendez-vous déjà attribués restent visibles dans l’administration. Les changements de réservation et de disponibilité acquièrent le même verrou MySQL avant de vérifier les chevauchements.
+- **Gestion.** Le rôle disposant de `requests.manage` peut proposer un créneau, confirmer, refuser ou annuler une demande. Une proposition réserve le créneau jusqu’à sa modification ou son annulation. Les statuts et changements de créneau sont historisés.
+- **Devis.** L’administration permet de suivre le statut, le montant proposé, la réponse et les notes internes. La réponse peut être ouverte dans la messagerie du poste. Les notifications SMTP et la transformation d’un devis en commande seront raccordées dans les phases correspondantes.

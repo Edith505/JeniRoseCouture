@@ -2,7 +2,10 @@
     <section class="prose" aria-labelledby="contact-preparer">
         <h2 id="contact-preparer">Préparer votre demande</h2>
         <p>Indiquez la prestation souhaitée, la pièce concernée, votre commune et le délai que vous envisagez. Pour une retouche, précisez la partie à ajuster. Pour une création, décrivez l’occasion ou l’usage prévu.</p>
-        <a class="action action-primary" href="/index.php/faq">Consulter les questions fréquentes</a>
+        <div class="hero-actions">
+            <a class="action action-primary" href="/index.php/devis">Demander un devis</a>
+            <a class="action action-outline" href="/index.php/reservation">Prendre rendez-vous</a>
+        </div>
     </section>
     <section class="info-card" aria-labelledby="contact-secteurs">
         <h2 id="contact-secteurs">Marseille et Pertuis</h2>

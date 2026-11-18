@@ -6,6 +6,7 @@ $navigation = [
     '/tarifs' => 'Tarifs',
     '/galerie' => 'Galerie',
     '/contact' => 'Contact',
+    '/reservation' => 'Rendez-vous',
 ];
 ?>
 <header class="site-header">

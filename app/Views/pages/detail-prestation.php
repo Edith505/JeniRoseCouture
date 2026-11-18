@@ -23,7 +23,11 @@ $examples = array_filter(array_map('trim', explode("\n", $service['examples'])))
             <h2>Conditions</h2>
             <p class="catalogue-lines"><?= htmlspecialchars($service['conditions'], ENT_QUOTES, 'UTF-8') ?></p>
         <?php endif; ?>
-        <a class="action action-outline" href="/index.php/contact">Informations de contact</a>
+        <?php if ($service['action_intent'] === 'quote'): ?>
+            <a class="action action-primary" href="/index.php/devis?service=<?= rawurlencode($service['slug']) ?>">Demander un devis</a>
+        <?php else: ?>
+            <a class="action action-primary" href="/index.php/reservation?service=<?= rawurlencode($service['slug']) ?>">Prendre rendez-vous</a>
+        <?php endif; ?>
     </section>
     <?php if ($imageUrl !== null): ?>
         <img class="page-photo" src="<?= htmlspecialchars($imageUrl, ENT_QUOTES, 'UTF-8') ?>"

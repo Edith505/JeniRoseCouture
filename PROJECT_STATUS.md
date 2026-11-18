@@ -59,3 +59,11 @@
 - Éditeur, aperçu privé, publication transactionnelle et gestion des photographies développés.
 - Portrait optimisé et conservé hors du dépôt. Biographie et parcours fictifs disponibles dans le brouillon après initialisation.
 - Migration 004 appliquée. Portrait publié, aperçu privé, téléversement, archivage, restauration et séparation du brouillon ont été vérifiés via Apache. Le refus de publier une biographie fictive en mode production a été vérifié.
+
+## Phase 12 vérifiée en local
+
+- Migration 005 appliquée. Réservation automatique et demande de rendez-vous testées via Apache, y compris la concurrence sur un créneau.
+- Créneaux, fermeture de journée, réaffectation et historique vérifiés. Les créneaux de rendez-vous futurs utilisent l’heure de Paris à l’écran et UTC en base.
+- Devis avec photographie, protection de son accès, montant décimal et réponse administrateur vérifiés. Les données fonctionnelles de test ont été retirées.
+- La conversion du devis en commande et les envois SMTP sont prévus dans les phases Commandes et Notifications.
+- Formulaires publics, liste des rendez-vous et écrans de créneaux contrôlés dans Chrome à 320, 768 et 1440 px.

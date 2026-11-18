@@ -9,6 +9,7 @@ use App\Auth\AdminAccess;
 use App\Auth\AdminSession;
 use App\Catalog\Catalogue;
 use App\Database\Connection;
+use App\Requests\ClientRequests;
 use Throwable;
 
 final class AdminController
@@ -26,7 +27,7 @@ final class AdminController
             'admin-login' => ['GET', 'HEAD', 'POST'],
             'admin-logout' => ['POST'],
             'admin', 'admin-catalogue', 'admin-a-propos-apercu', 'admin-a-propos-image' => ['GET', 'HEAD'],
-            'admin-prestation', 'admin-categorie', 'admin-a-propos', 'admin-a-propos-entree' => ['GET', 'HEAD', 'POST'],
+            'admin-prestation', 'admin-categorie', 'admin-a-propos', 'admin-a-propos-entree', 'admin-demandes' => ['GET', 'HEAD', 'POST'],
         };
 
         if (!in_array($method, $allowed, true)) {
@@ -49,7 +50,7 @@ final class AdminController
                 'admin-logout' => $this->logout(),
                 'admin' => $this->home($method),
                 'admin-catalogue', 'admin-prestation', 'admin-categorie',
-                'admin-a-propos', 'admin-a-propos-entree', 'admin-a-propos-apercu', 'admin-a-propos-image'
+                'admin-a-propos', 'admin-a-propos-entree', 'admin-a-propos-apercu', 'admin-a-propos-image', 'admin-demandes'
                     => $this->feature($route, $method),
             };
         } catch (Throwable $error) {
@@ -121,6 +122,7 @@ final class AdminController
             $csrf = AdminSession::token();
             $catalogueNavigation = $access->can($userId, 'catalog.manage');
             $aboutNavigation = $access->can($userId, 'about.manage');
+            $requestNavigation = $access->can($userId, 'requests.manage');
             $activeAdminPage = 'overview';
             require dirname(__DIR__) . '/Views/admin/home.php';
         }
@@ -138,7 +140,8 @@ final class AdminController
         $access = new AdminAccess($database);
 
         $about = str_starts_with($route, 'admin-a-propos');
-        $permission = $about ? 'about.manage' : 'catalog.manage';
+        $requests = $route === 'admin-demandes';
+        $permission = $requests ? 'requests.manage' : ($about ? 'about.manage' : 'catalog.manage');
 
         if (!$access->can($userId, 'admin.access') || !$access->can($userId, $permission)) {
             http_response_code(403);
@@ -149,10 +152,18 @@ final class AdminController
         }
 
         AdminSession::touch();
-        if ($about) {
-            (new AdminAboutController(new AboutContent($database)))->dispatch($route, $method, $access->can($userId, 'catalog.manage'));
+        if ($requests) {
+            (new AdminRequestsController(new ClientRequests($database)))->dispatch(
+                $method, $userId, $access->can($userId, 'catalog.manage'), $access->can($userId, 'about.manage'),
+            );
+        } elseif ($about) {
+            (new AdminAboutController(new AboutContent($database)))->dispatch(
+                $route, $method, $access->can($userId, 'catalog.manage'), $access->can($userId, 'requests.manage'),
+            );
         } else {
-            (new AdminCatalogueController(new Catalogue($database)))->dispatch($route, $method, $access->can($userId, 'about.manage'));
+            (new AdminCatalogueController(new Catalogue($database)))->dispatch(
+                $route, $method, $access->can($userId, 'about.manage'), $access->can($userId, 'requests.manage'),
+            );
         }
     }
 

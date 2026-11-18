@@ -13,7 +13,7 @@ require __DIR__ . '/partials/public-header.php';
                 <p class="hero-description">Création sur mesure, retouches et entretien de vos vêtements à Marseille et Pertuis. Nous prenons soin de chaque détail pour donner vie à vos envies.</p>
                 <div class="hero-actions">
                     <a class="action action-primary" href="#prestations">Découvrir nos services <span aria-hidden="true">↓</span></a>
-                    <a class="action action-outline" href="/index.php/tarifs">Voir les tarifs</a>
+                    <a class="action action-outline" href="/index.php/reservation">Prendre rendez-vous</a>
                 </div>
             </div>
         </div>

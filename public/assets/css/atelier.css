@@ -507,3 +507,25 @@ button { cursor: pointer; }
 @media (max-width: 460px) {
     .about-entries { grid-template-columns: 1fr; }
 }
+
+.request-card {
+    max-width: 48rem;
+    padding: clamp(1rem, 4vw, 2.3rem);
+    margin-block: 1.2rem;
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: .65rem;
+}
+.request-modes { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1.4rem; }
+.request-website { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.request-filter { display: flex; flex-wrap: wrap; gap: .65rem; align-items: flex-end; margin-block: 1rem; }
+.request-summary { display: grid; grid-template-columns: minmax(7rem, auto) minmax(0, 1fr); gap: .5rem .9rem; margin-block: 1rem; }
+.request-summary dt { font-weight: 700; }
+.request-summary dd { margin: 0; overflow-wrap: anywhere; }
+.request-edit { margin-top: 1.2rem; }
+.request-photos { display: flex; flex-wrap: wrap; gap: .75rem; list-style: none; padding: 0; }
+
+@media (max-width: 440px) {
+    .request-summary { grid-template-columns: minmax(0, 1fr); }
+    .request-summary dd { margin-bottom: .4rem; }
+}

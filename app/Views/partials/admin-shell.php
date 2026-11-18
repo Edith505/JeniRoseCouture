@@ -10,6 +10,9 @@ require __DIR__ . '/document-start.php';
             <?php if ($catalogueNavigation ?? false): ?>
                 <a href="/index.php?route=admin-catalogue" <?= ($activeAdminPage ?? '') === 'catalogue' ? 'aria-current="page"' : '' ?>>Prestations et tarifs</a>
             <?php endif; ?>
+            <?php if ($requestNavigation ?? false): ?>
+                <a href="/index.php?route=admin-demandes" <?= ($activeAdminPage ?? '') === 'requests' ? 'aria-current="page"' : '' ?>>Rendez-vous et devis</a>
+            <?php endif; ?>
             <?php if ($aboutNavigation ?? false): ?>
                 <a href="/index.php?route=admin-a-propos" <?= ($activeAdminPage ?? '') === 'about' ? 'aria-current="page"' : '' ?>>Contenu du site · À propos</a>
             <?php endif; ?>
