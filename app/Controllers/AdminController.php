@@ -13,6 +13,7 @@ use App\Dashboard\Period;
 use App\Database\Connection;
 use DomainException;
 use App\Requests\ClientRequests;
+use App\Sales\Sales;
 use Throwable;
 
 final class AdminController
@@ -31,7 +32,7 @@ final class AdminController
             'admin-login' => ['GET', 'HEAD', 'POST'],
             'admin-logout' => ['POST'],
             'admin', 'admin-catalogue', 'admin-a-propos-apercu', 'admin-a-propos-image' => ['GET', 'HEAD'],
-            'admin-prestation', 'admin-categorie', 'admin-a-propos', 'admin-a-propos-entree', 'admin-demandes' => ['GET', 'HEAD', 'POST'],
+            'admin-prestation', 'admin-categorie', 'admin-a-propos', 'admin-a-propos-entree', 'admin-demandes', 'admin-clients', 'admin-commandes' => ['GET', 'HEAD', 'POST'],
         };
 
         if (!in_array($method, $allowed, true)) {
@@ -54,7 +55,8 @@ final class AdminController
                 'admin-logout' => $this->logout(),
                 'admin' => $this->home($method),
                 'admin-catalogue', 'admin-prestation', 'admin-categorie',
-                'admin-a-propos', 'admin-a-propos-entree', 'admin-a-propos-apercu', 'admin-a-propos-image', 'admin-demandes'
+                'admin-a-propos', 'admin-a-propos-entree', 'admin-a-propos-apercu', 'admin-a-propos-image',
+                'admin-demandes', 'admin-clients', 'admin-commandes'
                     => $this->feature($route, $method),
             };
         } catch (Throwable $error) {
@@ -125,17 +127,15 @@ final class AdminController
         AdminSession::touch();
         if ($method === 'GET') {
             $csrf = AdminSession::token();
-            $catalogueNavigation = $access->can($userId, 'catalog.manage');
-            $aboutNavigation = $access->can($userId, 'about.manage');
-            $requestNavigation = $access->can($userId, 'requests.manage');
+            [$catalogueNavigation, $aboutNavigation, $requestNavigation, $salesNavigation] = self::navigation($access, $userId);
             $profile = $database->prepare('SELECT display_name FROM users WHERE id = ?');
             $profile->execute([$userId]);
             $adminName = (string) $profile->fetchColumn();
             $activeAdminPage = 'overview';
-            $overview = null;
+            $overview = $salesStats = null;
             $period = null;
             $periodError = null;
-            if ($requestNavigation) {
+            if ($requestNavigation || $salesNavigation) {
                 try {
                     $period = Period::fromQuery($_GET);
                 } catch (DomainException $error) {
@@ -143,7 +143,12 @@ final class AdminController
                     $periodError = $error->getMessage();
                     $period = Period::fromQuery([]);
                 }
-                $overview = (new Overview($database))->load($period);
+                if ($requestNavigation) {
+                    $overview = (new Overview($database))->load($period);
+                }
+                if ($salesNavigation) {
+                    $salesStats = (new Sales($database))->totals($period->bounds());
+                }
             }
             require dirname(__DIR__) . '/Views/admin/home.php';
         }
@@ -160,10 +165,12 @@ final class AdminController
         $database = Connection::open();
         $access = new AdminAccess($database);
 
-        $about = str_starts_with($route, 'admin-a-propos');
-        $requests = $route === 'admin-demandes';
-        $permission = $requests ? 'requests.manage' : ($about ? 'about.manage' : 'catalog.manage');
-
+        $permission = match (true) {
+            str_starts_with($route, 'admin-a-propos') => 'about.manage',
+            $route === 'admin-demandes' => 'requests.manage',
+            $route === 'admin-clients' || $route === 'admin-commandes' => 'sales.manage',
+            default => 'catalog.manage',
+        };
         if (!$access->can($userId, 'admin.access') || !$access->can($userId, $permission)) {
             http_response_code(403);
             if ($method !== 'HEAD') {
@@ -173,19 +180,23 @@ final class AdminController
         }
 
         AdminSession::touch();
-        if ($requests) {
-            (new AdminRequestsController(new ClientRequests($database)))->dispatch(
-                $method, $userId, $access->can($userId, 'catalog.manage'), $access->can($userId, 'about.manage'),
-            );
-        } elseif ($about) {
-            (new AdminAboutController(new AboutContent($database)))->dispatch(
-                $route, $method, $access->can($userId, 'catalog.manage'), $access->can($userId, 'requests.manage'),
-            );
-        } else {
-            (new AdminCatalogueController(new Catalogue($database)))->dispatch(
-                $route, $method, $access->can($userId, 'about.manage'), $access->can($userId, 'requests.manage'),
-            );
-        }
+        $navigation = self::navigation($access, $userId);
+        match ($permission) {
+            'about.manage' => (new AdminAboutController(new AboutContent($database)))->dispatch($route, $method, $navigation),
+            'requests.manage' => (new AdminRequestsController(new ClientRequests($database)))->dispatch($method, $userId, $navigation),
+            'sales.manage' => (new AdminSalesController(new Sales($database)))->dispatch($route, $method, $userId, $navigation),
+            default => (new AdminCatalogueController(new Catalogue($database)))->dispatch($route, $method, $navigation),
+        };
+    }
+
+    private static function navigation(AdminAccess $access, int $userId): array
+    {
+        return [
+            $access->can($userId, 'catalog.manage'),
+            $access->can($userId, 'about.manage'),
+            $access->can($userId, 'requests.manage'),
+            $access->can($userId, 'sales.manage'),
+        ];
     }
 
     private function logout(): void

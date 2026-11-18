@@ -618,3 +618,18 @@ button { cursor: pointer; }
     .dashboard-counters > div { padding: .8rem; }
     .dashboard-timeline li { grid-template-columns: minmax(0, 1fr); }
 }
+
+.sales-inline { display: flex; flex-wrap: wrap; align-items: center; gap: .7rem 1.2rem; margin-block: 1rem; }
+.sales-total { margin: 0; font-size: 1.12rem; }
+.sales-list { overflow-wrap: anywhere; }
+.sales-fieldset { min-width: 0; border: 1px solid var(--rule); margin: 0; padding: 1rem; border-radius: .55rem; }
+.sales-fieldset legend { padding-inline: .35rem; font-weight: 700; }
+.sales-fieldset > label { display: block; margin-block: .6rem; }
+.sales-line { display: grid; gap: .7rem; margin-bottom: .85rem; padding: .9rem; border-radius: .55rem; background: #faf0f8; }
+.sales-line .action { justify-self: start; }
+.sales-order-form { max-width: 58rem; }
+.dashboard-sales { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-bottom: 0; }
+
+@media (max-width: 620px) {
+    .dashboard-sales { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

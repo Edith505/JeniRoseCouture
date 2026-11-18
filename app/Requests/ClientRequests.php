@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Requests;
 
+use App\Sales\Sales;
 use DateTimeZone;
 use DomainException;
 use PDO;
@@ -77,10 +78,12 @@ final class ClientRequests
                 throw new DomainException('Ce créneau n’est plus disponible. Choisissez un autre créneau.');
             }
             $status = $automatic ? 'confirmed' : 'pending';
+            $client = $this->clientLink('appointments', $contact);
             $this->query(
                 'INSERT INTO appointments (service_id, slot_id, submitted_key, contact_name, contact_email, contact_phone,
-                    preference, notes, mode, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, UTC_TIMESTAMP())',
-                [$serviceId, $automatic ? $slotId : null, $key, ...$contact, $notes, $automatic ? 'automatic' : 'request', $status],
+                    preference, notes, mode, status' . ($client === [] ? '' : ', client_id') . ', created_at)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?' . ($client === [] ? '' : ', ?') . ', UTC_TIMESTAMP())',
+                [$serviceId, $automatic ? $slotId : null, $key, ...$contact, $notes, $automatic ? 'automatic' : 'request', $status, ...$client],
             );
             $this->event((int) $this->db->lastInsertId(), $status, $automatic ? $slotId : null, null);
         });
@@ -174,9 +177,14 @@ final class ClientRequests
                 throw new DomainException('Cette prestation n’est plus disponible.');
             }
 
+            if ($this->query('SELECT id FROM quotes WHERE submitted_key = ?', [$key])->fetchColumn()) {
+                return;
+            }
+            $client = $this->clientLink('quotes', $contact);
             $upsert = $this->query('INSERT INTO quotes (service_id, submitted_key, contact_name, contact_email, contact_phone,
-                preference, contact_method, notes, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, UTC_TIMESTAMP())
-                ON DUPLICATE KEY UPDATE id = quotes.id', [$service, $key, ...$contact, $method, $notes]);
+                preference, contact_method, notes' . ($client === [] ? '' : ', client_id') . ', created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?' . ($client === [] ? '' : ', ?') . ', UTC_TIMESTAMP())
+                ON DUPLICATE KEY UPDATE id = quotes.id', [$service, $key, ...$contact, $method, $notes, ...$client]);
 
             if ($upsert->rowCount() !== 1) {
                 return;
@@ -253,6 +261,17 @@ final class ClientRequests
             FROM availability_rules a
             JOIN booking_resources r ON r.id = a.resource_id WHERE a.ends_utc >= UTC_TIMESTAMP()
             ORDER BY a.starts_utc, a.id LIMIT 100")->fetchAll();
+    }
+
+    private function clientLink(string $table, array $contact): array
+    {
+        $column = $this->query("SELECT 1 FROM information_schema.columns
+            WHERE table_schema = DATABASE() AND table_name = ? AND column_name = 'client_id'", [$table]);
+        if (!$column->fetchColumn()) {
+            return [];
+        }
+
+        return [(new Sales($this->db))->resolveClient($contact[0], $contact[1], $contact[2])];
     }
 
     private function event(int $id, string $status, ?int $slot, ?int $actor): void

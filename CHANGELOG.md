@@ -54,3 +54,9 @@
 
 - Remplacement de la vue d’ensemble par un tableau de bord alimenté par les rendez-vous et les devis.
 - Ajout des périodes, d’un graphique avec équivalent tabulaire, du classement des prestations et de la liste des rendez-vous à venir.
+
+## Phase 14
+
+- Ajout des fiches clients, de l’archivage et de l’historique lié aux demandes.
+- Ajout des commandes, de leurs lignes, statuts, prix et historique.
+- Ajout de la conversion d’un devis accepté en commande et du suivi clients et commandes dans la vue d’ensemble.

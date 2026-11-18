@@ -138,3 +138,17 @@ sudo mysql jeni_rose_couture < database/seeders/005_permissions_demandes.sql
 Les périodes sont calculées à l’heure de Paris. Un rendez-vous confirmé compte selon la date du créneau. Les demandes et devis comptent selon la date de dépôt. La liste des prochains rendez-vous reste indépendante du filtre de période.
 
 Le graphique utilise Chart.js 4.5.1, servi localement, et les mêmes chiffres sont disponibles sous forme de tableau. Le code, la version et la licence de la bibliothèque se trouvent dans `public/assets/js/`. [Documentation Chart.js](https://www.chartjs.org/docs/latest/getting-started/integration.html)
+
+## Clients et commandes
+
+Appliquer la migration 006 et attribuer la permission du module :
+
+```sh
+sudo mysql jeni_rose_couture < database/migrations/006_clients_commandes.sql &&
+sudo mysql jeni_rose_couture < database/seeders/006_permissions_ventes.sql
+```
+
+- **Clients.** La migration rattache l’historique des demandes à une fiche unique par adresse e-mail. Les nouveaux formulaires sont liés automatiquement à leur fiche. Une fiche contient les coordonnées, une adresse postale principale et des notes internes. L’archivage conserve son historique.
+- **Commandes.** Depuis une fiche client ou la liste des commandes, créer une commande avec ses lignes, quantités et prix unitaires. Le total est calculé au centime côté serveur. L’historique contient un instantané des montants et des lignes à chaque enregistrement.
+- **Devis acceptés.** Ouvrir le devis dans **Rendez-vous et devis**, préciser le montant accepté, puis utiliser **Convertir ou ouvrir la commande**. La commande reprend le montant accepté et garde le lien vers son devis d’origine. Une nouvelle conversion ouvre la même commande.
+- **Acomptes.** Le champ de la commande indique l’acompte convenu. Le suivi des encaissements sera ajouté avec les paiements. L’affectation utilise provisoirement les personnes et équipes configurées dans le calendrier.

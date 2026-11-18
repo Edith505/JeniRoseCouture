@@ -105,6 +105,9 @@ $dateLabel = static fn (?string $value): string => $value === null ? '' : Reques
             <?php if ($record['notes'] !== ''): ?><dt><?= $quote ? 'Projet' : 'Informations' ?></dt><dd class="catalogue-lines"><?= $escape($record['notes']) ?></dd><?php endif; ?>
             <?php if (!empty($record['starts_utc'])): ?><dt>Créneau attribué</dt><dd><?= $escape($dateLabel($record['starts_utc']) . ' · ' . $record['location']) ?></dd><?php endif; ?>
         </dl>
+        <?php if ($salesNavigation && $record['client_id'] !== null): ?>
+            <a class="text-link" href="/index.php?route=admin-clients&amp;id=<?= (int) $record['client_id'] ?>">Ouvrir la fiche client</a>
+        <?php endif; ?>
         <?php if ($photos !== []): ?>
             <ul class="request-photos" role="list">
                 <?php foreach ($photos as $key => $photo): ?>
@@ -157,4 +160,19 @@ $dateLabel = static fn (?string $value): string => $value === null ? '' : Reques
             </ol>
         </section>
     <?php endif; ?>
+<?php endif; ?>
+
+<?php if ($quote && $salesNavigation && $record !== null && $record['status'] === 'accepted'): ?>
+    <section class="catalogue-categories">
+        <h2>Commande</h2>
+        <?php if ($record['proposed_amount'] === null): ?>
+            <p>Renseignez le montant accepté avant de convertir le devis.</p>
+        <?php else: ?>
+            <form method="post" action="/index.php?route=admin-commandes">
+                <input type="hidden" name="csrf" value="<?= $escape($csrf) ?>">
+                <input type="hidden" name="quote_id" value="<?= (int) $record['id'] ?>">
+                <button type="submit" class="action action-primary" name="intent" value="convert">Convertir ou ouvrir la commande</button>
+            </form>
+        <?php endif; ?>
+    </section>
 <?php endif; ?>

@@ -6,12 +6,10 @@ use App\Requests\RequestInput;
 $escape = static fn (mixed $value): string => htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
 ?>
 <h1>Vue d’ensemble</h1>
-<?php if ($overview === null): ?>
+<?php if ($period === null): ?>
     <p>Votre compte peut accéder aux modules affichés dans le menu.</p>
 <?php else: ?>
     <?php
-    $summary = $overview['summary'];
-    $hasActivity = $summary['manual'] + $summary['quotes'] > 0;
     $lastDay = $period->end->modify('-1 day');
     ?>
     <section class="dashboard-period" aria-labelledby="dashboard-periode">
@@ -37,6 +35,12 @@ $escape = static fn (mixed $value): string => htmlspecialchars((string) $value, 
         <?php endif; ?>
     </section>
 
+<?php endif; ?>
+<?php if ($overview !== null): ?>
+    <?php
+    $summary = $overview['summary'];
+    $hasActivity = $summary['manual'] + $summary['quotes'] > 0;
+    ?>
     <dl class="dashboard-counters">
         <div><dt>Rendez-vous confirmés</dt><dd><span><?= $summary['scheduled'] ?></span><small>Sur les créneaux de la période</small></dd></div>
         <div><dt>Demandes de rendez-vous</dt><dd><span><?= $summary['manual'] ?></span><small>Demandes manuelles reçues</small></dd></div>
@@ -113,5 +117,22 @@ $escape = static fn (mixed $value): string => htmlspecialchars((string) $value, 
                 <?php endforeach; ?>
             </ul>
         <?php endif; ?>
+    </section>
+<?php endif; ?>
+
+<?php if ($salesStats !== null): ?>
+    <section class="dashboard-panel dashboard-agenda">
+        <div class="catalogue-toolbar">
+            <h2>Clients et commandes</h2>
+            <div class="dashboard-shortcuts">
+                <a class="text-link" href="/index.php?route=admin-clients">Clients</a>
+                <a class="text-link" href="/index.php?route=admin-commandes">Commandes</a>
+            </div>
+        </div>
+        <dl class="dashboard-counters dashboard-sales">
+            <div><dt>Nouvelles fiches clients</dt><dd><span><?= $salesStats['clients'] ?></span><small>Créées sur la période</small></dd></div>
+            <div><dt>Nouvelles commandes</dt><dd><span><?= $salesStats['new_orders'] ?></span><small>Créées sur la période</small></dd></div>
+            <div><dt>Commandes à traiter</dt><dd><span><?= $salesStats['open_orders'] ?></span><small>Reçues ou en cours, toutes dates</small></dd></div>
+        </dl>
     </section>
 <?php endif; ?>

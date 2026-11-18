@@ -13,6 +13,10 @@ require __DIR__ . '/document-start.php';
             <?php if ($requestNavigation ?? false): ?>
                 <a href="/index.php?route=admin-demandes" <?= ($activeAdminPage ?? '') === 'requests' ? 'aria-current="page"' : '' ?>>Rendez-vous et devis</a>
             <?php endif; ?>
+            <?php if ($salesNavigation ?? false): ?>
+                <a href="/index.php?route=admin-clients" <?= ($activeAdminPage ?? '') === 'clients' ? 'aria-current="page"' : '' ?>>Clients</a>
+                <a href="/index.php?route=admin-commandes" <?= ($activeAdminPage ?? '') === 'orders' ? 'aria-current="page"' : '' ?>>Commandes</a>
+            <?php endif; ?>
             <?php if ($aboutNavigation ?? false): ?>
                 <a href="/index.php?route=admin-a-propos" <?= ($activeAdminPage ?? '') === 'about' ? 'aria-current="page"' : '' ?>>Contenu du site · À propos</a>
             <?php endif; ?>

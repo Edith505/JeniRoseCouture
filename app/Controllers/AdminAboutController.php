@@ -18,8 +18,9 @@ final class AdminAboutController
     {
     }
 
-    public function dispatch(string $route, string $method, bool $catalogueNavigation, bool $requestNavigation): void
+    public function dispatch(string $route, string $method, array $navigation): void
     {
+        [$catalogueNavigation, $aboutNavigation, $requestNavigation, $salesNavigation] = $navigation;
         if ($route === 'admin-a-propos-image') {
             $this->image($method);
             return;

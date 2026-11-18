@@ -15,8 +15,9 @@ final class AdminRequestsController
     {
     }
 
-    public function dispatch(string $method, int $actor, bool $catalogueNavigation, bool $aboutNavigation): void
+    public function dispatch(string $method, int $actor, array $navigation): void
     {
+        [$catalogueNavigation, $aboutNavigation, $requestNavigation, $salesNavigation] = $navigation;
         $requestNavigation = true;
         $activeAdminPage = 'requests';
         $csrf = AdminSession::token();
