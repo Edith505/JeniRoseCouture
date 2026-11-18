@@ -67,3 +67,10 @@
 - Devis avec photographie, protection de son accès, montant décimal et réponse administrateur vérifiés. Les données fonctionnelles de test ont été retirées.
 - La conversion du devis en commande et les envois SMTP sont prévus dans les phases Commandes et Notifications.
 - Formulaires publics, liste des rendez-vous et écrans de créneaux contrôlés dans Chrome à 320, 768 et 1440 px.
+
+## Phase 13 vérifiée en local
+
+- Tableau de bord alimenté par MySQL et protégé par la permission du module. Aucun changement de schéma.
+- Vérifiés sur des données temporaires : quatre compteurs, agrégation aux bornes d’un changement d’heure, filtres, protection des données, classement et prochains rendez-vous.
+- Graphique Chart.js et rendu contrôlés dans Chrome à 320, 768 et 1440 px. Les données temporaires ont été retirées.
+- Clients, commandes et indicateurs financiers seront raccordés dans leurs phases respectives.

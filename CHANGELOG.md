@@ -49,3 +49,8 @@
 - Ajout de la réservation automatique avec récapitulatif et des demandes de rendez-vous.
 - Ajout des créneaux administrables, des répétitions hebdomadaires, des fermetures et de l’historique des rendez-vous.
 - Ajout du dépôt de devis avec photographies privées ainsi que du suivi du montant, de la réponse et du statut.
+
+## Phase 13
+
+- Remplacement de la vue d’ensemble par un tableau de bord alimenté par les rendez-vous et les devis.
+- Ajout des périodes, d’un graphique avec équivalent tabulaire, du classement des prestations et de la liste des rendez-vous à venir.

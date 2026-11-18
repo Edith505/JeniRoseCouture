@@ -130,3 +130,11 @@ sudo mysql jeni_rose_couture < database/seeders/005_permissions_demandes.sql
 - **Fermetures.** Fermer un créneau ou les créneaux d’une journée pour une ou toutes les personnes. Les rendez-vous déjà attribués restent visibles dans l’administration. Les changements de réservation et de disponibilité acquièrent le même verrou MySQL avant de vérifier les chevauchements.
 - **Gestion.** Le rôle disposant de `requests.manage` peut proposer un créneau, confirmer, refuser ou annuler une demande. Une proposition réserve le créneau jusqu’à sa modification ou son annulation. Les statuts et changements de créneau sont historisés.
 - **Devis.** L’administration permet de suivre le statut, le montant proposé, la réponse et les notes internes. La réponse peut être ouverte dans la messagerie du poste. Les notifications SMTP et la transformation d’un devis en commande seront raccordées dans les phases correspondantes.
+
+## Tableau de bord
+
+**Administration > Vue d’ensemble** affiche les données des rendez-vous et des devis. Aucune migration supplémentaire n’est nécessaire après la migration 005. L’affichage des données demande la permission `requests.manage`.
+
+Les périodes sont calculées à l’heure de Paris. Un rendez-vous confirmé compte selon la date du créneau. Les demandes et devis comptent selon la date de dépôt. La liste des prochains rendez-vous reste indépendante du filtre de période.
+
+Le graphique utilise Chart.js 4.5.1, servi localement, et les mêmes chiffres sont disponibles sous forme de tableau. Le code, la version et la licence de la bibliothèque se trouvent dans `public/assets/js/`. [Documentation Chart.js](https://www.chartjs.org/docs/latest/getting-started/integration.html)

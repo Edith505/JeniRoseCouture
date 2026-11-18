@@ -8,7 +8,10 @@ use App\About\AboutContent;
 use App\Auth\AdminAccess;
 use App\Auth\AdminSession;
 use App\Catalog\Catalogue;
+use App\Dashboard\Overview;
+use App\Dashboard\Period;
 use App\Database\Connection;
+use DomainException;
 use App\Requests\ClientRequests;
 use Throwable;
 
@@ -20,7 +23,8 @@ final class AdminController
     public function dispatch(string $route, string $method): void
     {
         header('Cache-Control: no-store');
-        header("Content-Security-Policy: default-src 'none'; style-src 'self'; font-src 'self'; img-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'");
+        $scripts = $route === 'admin' ? "; script-src 'self'" : '';
+        header("Content-Security-Policy: default-src 'none'; style-src 'self'; font-src 'self'; img-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'" . $scripts);
         header('Referrer-Policy: no-referrer');
 
         $allowed = match ($route) {
@@ -110,7 +114,8 @@ final class AdminController
             return;
         }
 
-        $access = new AdminAccess(Connection::open());
+        $database = Connection::open();
+        $access = new AdminAccess($database);
         if (!$access->can($userId, 'admin.access')) {
             AdminSession::clear();
             self::redirect(self::LOGIN);
@@ -123,7 +128,23 @@ final class AdminController
             $catalogueNavigation = $access->can($userId, 'catalog.manage');
             $aboutNavigation = $access->can($userId, 'about.manage');
             $requestNavigation = $access->can($userId, 'requests.manage');
+            $profile = $database->prepare('SELECT display_name FROM users WHERE id = ?');
+            $profile->execute([$userId]);
+            $adminName = (string) $profile->fetchColumn();
             $activeAdminPage = 'overview';
+            $overview = null;
+            $period = null;
+            $periodError = null;
+            if ($requestNavigation) {
+                try {
+                    $period = Period::fromQuery($_GET);
+                } catch (DomainException $error) {
+                    http_response_code(422);
+                    $periodError = $error->getMessage();
+                    $period = Period::fromQuery([]);
+                }
+                $overview = (new Overview($database))->load($period);
+            }
             require dirname(__DIR__) . '/Views/admin/home.php';
         }
     }

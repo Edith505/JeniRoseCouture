@@ -20,6 +20,9 @@ require __DIR__ . '/document-start.php';
     </aside>
     <div class="admin-content">
         <header class="admin-bar">
+            <?php if (!empty($adminName)): ?>
+                <span class="admin-identity"><?= htmlspecialchars($adminName, ENT_QUOTES, 'UTF-8') ?></span>
+            <?php endif; ?>
             <a class="text-link" href="/">Voir le site <span aria-hidden="true">↗</span></a>
             <form method="post" action="/index.php?route=admin-logout">
                 <input type="hidden" name="csrf" value="<?= htmlspecialchars($csrf, ENT_QUOTES, 'UTF-8') ?>">

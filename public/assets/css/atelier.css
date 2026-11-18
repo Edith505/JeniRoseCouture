@@ -529,3 +529,92 @@ button { cursor: pointer; }
     .request-summary { grid-template-columns: minmax(0, 1fr); }
     .request-summary dd { margin-bottom: .4rem; }
 }
+
+.admin-identity { margin-right: auto; color: var(--muted); font-size: .88rem; font-weight: 600; overflow-wrap: anywhere; }
+.dashboard-period {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: .8rem 1.5rem;
+    padding: 1.1rem 1.25rem;
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: .8rem;
+}
+.dashboard-period h2 { margin-bottom: .25rem; font-size: 1.4rem; }
+.dashboard-period p { margin: 0; color: var(--muted); font-size: .9rem; }
+.dashboard-period .form-message { width: 100%; color: #792140; }
+.dashboard-presets, .dashboard-dates, .dashboard-shortcuts { display: flex; flex-wrap: wrap; align-items: end; gap: .55rem; }
+.dashboard-dates label { min-width: 0; font-size: .82rem; font-weight: 700; }
+.dashboard-dates .field-input { min-height: 2.35rem; padding: .3rem .55rem; margin-top: .2rem; }
+.dashboard-presets .action, .dashboard-dates .action { min-height: 2.35rem; padding: .4rem .85rem; font-size: .85rem; }
+
+.dashboard-counters {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: .9rem;
+    margin-block: 1.05rem;
+}
+.dashboard-counters > div {
+    min-width: 0;
+    padding: 1rem 1.1rem;
+    border: 1px solid #25253814;
+    border-radius: .85rem;
+    background: #fce4ef;
+}
+.dashboard-counters > div:nth-child(2) { background: #ece5ff; }
+.dashboard-counters > div:nth-child(3) { background: #e2f2ff; }
+.dashboard-counters > div:nth-child(4) { background: #f9e8f7; }
+.dashboard-counters dt { font-size: .92rem; font-weight: 700; overflow-wrap: anywhere; }
+.dashboard-counters dd { margin: 0; }
+.dashboard-counters dd > span { display: block; font: 600 2.6rem / 1.2 var(--display); margin-block: .35rem; }
+.dashboard-counters small { display: block; color: var(--muted); line-height: 1.35; }
+
+.dashboard-grid { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 1rem; }
+.dashboard-panel {
+    min-width: 0;
+    padding: clamp(1rem, 2.5vw, 1.6rem);
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: .8rem;
+}
+.dashboard-panel h2 { font-size: clamp(1.35rem, 2.8vw, 2rem); letter-spacing: -.025em; }
+.dashboard-empty { margin-block: .75rem 0; color: var(--muted); }
+.dashboard-chart { height: 16rem; margin-top: 1rem; }
+.dashboard-data { margin-top: .9rem; }
+.dashboard-data summary { cursor: pointer; text-decoration: underline; text-underline-offset: .15em; }
+.dashboard-data .catalogue-table-wrap { margin-top: .6rem; }
+.dashboard-data .catalogue-table { min-width: 16rem; }
+.dashboard-data .catalogue-table :is(th,td) { padding: .45rem .55rem; }
+
+.dashboard-rank, .dashboard-timeline { list-style: none; padding: 0; margin: .8rem 0; }
+.dashboard-rank li { margin-bottom: .75rem; }
+.dashboard-rank li > div { display: flex; justify-content: space-between; gap: .6rem; font-size: .91rem; }
+.dashboard-rank meter { display: block; width: 100%; height: .75rem; margin-top: .25rem; accent-color: #896dbb; }
+.dashboard-rank meter::-webkit-meter-bar { background: #f0e9fc; border-radius: .5rem; border: 0; }
+.dashboard-rank meter::-webkit-meter-optimum-value { background: #896dbb; border-radius: .5rem; }
+
+.dashboard-agenda { margin-top: 1rem; }
+.dashboard-shortcuts { gap: .6rem 1rem; }
+.dashboard-timeline { margin-bottom: 0; }
+.dashboard-timeline li {
+    display: grid;
+    grid-template-columns: 1fr 1.45fr 1.4fr auto;
+    gap: .5rem 1.1rem;
+    padding-block: .8rem;
+    border-top: 1px solid var(--rule);
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 1040px) {
+    .dashboard-counters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 720px) {
+    .dashboard-grid { grid-template-columns: minmax(0, 1fr); }
+    .dashboard-timeline li { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 390px) {
+    .dashboard-counters { gap: .55rem; }
+    .dashboard-counters > div { padding: .8rem; }
+    .dashboard-timeline li { grid-template-columns: minmax(0, 1fr); }
+}
