@@ -19,7 +19,7 @@ final class AdminCatalogueController
 
     public function dispatch(string $route, string $method, array $navigation): void
     {
-        [$catalogueNavigation, $aboutNavigation, $requestNavigation, $salesNavigation] = $navigation;
+        [$catalogueNavigation, $aboutNavigation, $requestNavigation, $salesNavigation, $financeNavigation] = $navigation;
         $catalogueNavigation = true;
         $activeAdminPage = 'catalogue';
         $csrf = AdminSession::token();

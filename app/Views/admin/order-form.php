@@ -7,6 +7,10 @@ use App\Sales\Sales;
     <div class="sales-inline">
         <p class="sales-total">Total enregistré : <strong><?= $escape(Money::label($record['total_amount'])) ?></strong></p>
         <a class="text-link" href="/index.php?route=admin-clients&amp;id=<?= (int) $record['client_id'] ?>">Ouvrir la fiche client</a>
+        <?php if ($financeNavigation): ?>
+            <a class="text-link" href="/index.php?route=admin-finances&amp;view=payments&amp;order=<?= (int) $record['id'] ?>">Paiements</a>
+            <a class="text-link" href="/index.php?route=admin-finances&amp;view=invoices&amp;order=<?= (int) $record['id'] ?>">Factures et avoirs</a>
+        <?php endif; ?>
         <?php if ($record['source_quote_id'] !== null && $requestNavigation): ?>
             <a class="text-link" href="/index.php?route=admin-demandes&amp;view=quotes&amp;id=<?= (int) $record['source_quote_id'] ?>">Ouvrir le devis d’origine</a>
         <?php endif; ?>

@@ -152,3 +152,18 @@ sudo mysql jeni_rose_couture < database/seeders/006_permissions_ventes.sql
 - **Commandes.** Depuis une fiche client ou la liste des commandes, créer une commande avec ses lignes, quantités et prix unitaires. Le total est calculé au centime côté serveur. L’historique contient un instantané des montants et des lignes à chaque enregistrement.
 - **Devis acceptés.** Ouvrir le devis dans **Rendez-vous et devis**, préciser le montant accepté, puis utiliser **Convertir ou ouvrir la commande**. La commande reprend le montant accepté et garde le lien vers son devis d’origine. Une nouvelle conversion ouvre la même commande.
 - **Acomptes.** Le champ de la commande indique l’acompte convenu. Le suivi des encaissements sera ajouté avec les paiements. L’affectation utilise provisoirement les personnes et équipes configurées dans le calendrier.
+
+## Finances et factures
+
+Appliquer la migration 007, puis ouvrir **Administration > Finances et factures**.
+
+```sh
+composer install
+sudo mysql jeni_rose_couture < database/migrations/007_finances_factures.sql &&
+sudo mysql jeni_rose_couture < database/seeders/007_permissions_finances.sql
+```
+
+- **Paiements.** Enregistrer les règlements et remboursements par commande. Les acomptes convenus dans le module Commandes restent visibles séparément des encaissements.
+- **Dépenses.** Créer les catégories puis inscrire les dépenses TTC avec date, libellé et montant. La vue de suivi exporte une synthèse PDF et les registres de la période au format CSV.
+- **Factures.** Compléter le profil de facturation avec les données légales confirmées. Depuis une commande, confirmer l’adresse de facturation et les dates. Le modèle couvre les prestations domestiques en euros, avec prix contractuels TTC et un taux de TVA par facture ou la franchise en base. L’émission archive le PDF et son instantané. Un avoir total, numéroté dans la même série, conserve le lien vers la facture corrigée. Enregistrer séparément les remboursements effectués.
+- **Numérotation.** Une seule séquence est attribuée dans la même transaction que le stockage du document. Vérifier la série et les mentions applicables à l’entreprise avant toute émission réelle. Pour les opérations concernées par la réforme électronique, la transmission via une plateforme agréée reste à intégrer. [Mentions obligatoires sur une facture](https://entreprendre.service-public.gouv.fr/vosdroits/F31808) · [Facturation électronique et plateformes agréées](https://www.impots.gouv.fr/facturation-electronique-et-plateformes-agreees)

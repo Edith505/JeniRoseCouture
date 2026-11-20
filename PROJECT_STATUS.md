@@ -80,3 +80,9 @@
 - Fiches clients, historique, création et modification de commandes, et conversion des devis développés.
 - Contrôles de syntaxe, calcul exact des montants et regroupement des contacts vérifiés.
 - Migration 006 appliquée. Via Apache, le rattachement des rendez-vous et devis à une fiche unique, l’archivage, la réactivation, les commandes multilignes et la conservation des prix ont été vérifiés. Deux conversions simultanées d’un devis accepté ont produit une seule commande. Les données de test ont été retirées.
+
+## Phase 15 vérifiée en local
+
+- Registres, synthèses, exports, factures et avoirs développés. L’accès est protégé par la permission `finance.manage`.
+- Calcul de la TVA et PDF de démonstration vérifiés, dont une facture de 25 lignes sur deux pages.
+- Migration 007 appliquée. Numérotation, archivage, avoirs, paiements partiels et remboursements vérifiés en transaction annulée. Les cinq écrans et les exports PDF et CSV ont été vérifiés via Apache. Les mentions propres à l’entreprise restent à renseigner et à vérifier avant utilisation réelle.

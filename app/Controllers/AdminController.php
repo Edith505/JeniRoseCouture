@@ -11,6 +11,8 @@ use App\Catalog\Catalogue;
 use App\Dashboard\Overview;
 use App\Dashboard\Period;
 use App\Database\Connection;
+use App\Finance\Billing;
+use App\Finance\Ledger;
 use DomainException;
 use App\Requests\ClientRequests;
 use App\Sales\Sales;
@@ -24,7 +26,7 @@ final class AdminController
     public function dispatch(string $route, string $method): void
     {
         header('Cache-Control: no-store');
-        $scripts = $route === 'admin' ? "; script-src 'self'" : '';
+        $scripts = in_array($route, ['admin', 'admin-finances'], true) ? "; script-src 'self'" : '';
         header("Content-Security-Policy: default-src 'none'; style-src 'self'; font-src 'self'; img-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'" . $scripts);
         header('Referrer-Policy: no-referrer');
 
@@ -32,7 +34,7 @@ final class AdminController
             'admin-login' => ['GET', 'HEAD', 'POST'],
             'admin-logout' => ['POST'],
             'admin', 'admin-catalogue', 'admin-a-propos-apercu', 'admin-a-propos-image' => ['GET', 'HEAD'],
-            'admin-prestation', 'admin-categorie', 'admin-a-propos', 'admin-a-propos-entree', 'admin-demandes', 'admin-clients', 'admin-commandes' => ['GET', 'HEAD', 'POST'],
+            'admin-prestation', 'admin-categorie', 'admin-a-propos', 'admin-a-propos-entree', 'admin-demandes', 'admin-clients', 'admin-commandes', 'admin-finances' => ['GET', 'HEAD', 'POST'],
         };
 
         if (!in_array($method, $allowed, true)) {
@@ -56,7 +58,7 @@ final class AdminController
                 'admin' => $this->home($method),
                 'admin-catalogue', 'admin-prestation', 'admin-categorie',
                 'admin-a-propos', 'admin-a-propos-entree', 'admin-a-propos-apercu', 'admin-a-propos-image',
-                'admin-demandes', 'admin-clients', 'admin-commandes'
+                'admin-demandes', 'admin-clients', 'admin-commandes', 'admin-finances'
                     => $this->feature($route, $method),
             };
         } catch (Throwable $error) {
@@ -127,15 +129,15 @@ final class AdminController
         AdminSession::touch();
         if ($method === 'GET') {
             $csrf = AdminSession::token();
-            [$catalogueNavigation, $aboutNavigation, $requestNavigation, $salesNavigation] = self::navigation($access, $userId);
+            [$catalogueNavigation, $aboutNavigation, $requestNavigation, $salesNavigation, $financeNavigation] = self::navigation($access, $userId);
             $profile = $database->prepare('SELECT display_name FROM users WHERE id = ?');
             $profile->execute([$userId]);
             $adminName = (string) $profile->fetchColumn();
             $activeAdminPage = 'overview';
-            $overview = $salesStats = null;
+            $overview = $salesStats = $financeStats = null;
             $period = null;
             $periodError = null;
-            if ($requestNavigation || $salesNavigation) {
+            if ($requestNavigation || $salesNavigation || $financeNavigation) {
                 try {
                     $period = Period::fromQuery($_GET);
                 } catch (DomainException $error) {
@@ -148,6 +150,9 @@ final class AdminController
                 }
                 if ($salesNavigation) {
                     $salesStats = (new Sales($database))->totals($period->bounds());
+                }
+                if ($financeNavigation) {
+                    $financeStats = (new Ledger($database))->totals($period);
                 }
             }
             require dirname(__DIR__) . '/Views/admin/home.php';
@@ -168,6 +173,7 @@ final class AdminController
         $permission = match (true) {
             str_starts_with($route, 'admin-a-propos') => 'about.manage',
             $route === 'admin-demandes' => 'requests.manage',
+            $route === 'admin-finances' => 'finance.manage',
             $route === 'admin-clients' || $route === 'admin-commandes' => 'sales.manage',
             default => 'catalog.manage',
         };
@@ -184,6 +190,8 @@ final class AdminController
         match ($permission) {
             'about.manage' => (new AdminAboutController(new AboutContent($database)))->dispatch($route, $method, $navigation),
             'requests.manage' => (new AdminRequestsController(new ClientRequests($database)))->dispatch($method, $userId, $navigation),
+            'finance.manage' => (new AdminFinanceController(new Ledger($database), new Billing($database), new Sales($database)))
+                ->dispatch($method, $userId, $navigation),
             'sales.manage' => (new AdminSalesController(new Sales($database)))->dispatch($route, $method, $userId, $navigation),
             default => (new AdminCatalogueController(new Catalogue($database)))->dispatch($route, $method, $navigation),
         };
@@ -196,6 +204,7 @@ final class AdminController
             $access->can($userId, 'about.manage'),
             $access->can($userId, 'requests.manage'),
             $access->can($userId, 'sales.manage'),
+            $access->can($userId, 'finance.manage'),
         ];
     }
 

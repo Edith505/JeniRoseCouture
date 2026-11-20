@@ -60,3 +60,9 @@
 - Ajout des fiches clients, de l’archivage et de l’historique lié aux demandes.
 - Ajout des commandes, de leurs lignes, statuts, prix et historique.
 - Ajout de la conversion d’un devis accepté en commande et du suivi clients et commandes dans la vue d’ensemble.
+
+## Phase 15
+
+- Ajout des registres de paiements, remboursements et dépenses.
+- Ajout de la facturation numérotée, des PDF archivés, du profil émetteur et des avoirs.
+- Ajout des synthèses, du graphique financier et des exports CSV et PDF.

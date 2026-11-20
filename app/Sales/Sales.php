@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Sales;
 
+use App\Finance\Billing;
 use DomainException;
 use PDO;
 use Throwable;
@@ -153,7 +154,7 @@ final class Sales
 
     private function writeOrder(?int $id, array $data, int $actor, ?int $quote = null): int
     {
-        $current = $id === null ? null : $this->query('SELECT client_id, source_quote_id FROM orders WHERE id = ? FOR UPDATE', [$id])->fetch();
+        $current = $id === null ? null : $this->query('SELECT client_id, source_quote_id, total_amount FROM orders WHERE id = ? FOR UPDATE', [$id])->fetch();
         if ($id !== null && !$current) {
             throw new DomainException('Commande introuvable.');
         }
@@ -191,6 +192,20 @@ final class Sales
             throw new DomainException('L’acompte convenu ne peut pas dépasser le total.');
         }
         $amount = Money::decimal($total);
+        $lockedByInvoice = $current && $this->db->query("SELECT 1 FROM information_schema.tables
+            WHERE table_schema=DATABASE() AND table_name='invoices'")->fetchColumn()
+            && (new Billing($this->db))->activeInvoice($id) !== null;
+        if ($lockedByInvoice) {
+            $saved = $this->order($id)['items'];
+            foreach ($saved as &$line) {
+                $line['service_id'] = $line['service_id'] === null ? null : (int) $line['service_id'];
+                $line['quantity'] = (int) $line['quantity'];
+            }
+            unset($line);
+            if ((int) $current['client_id'] !== $data['client_id'] || $saved !== $items) {
+                throw new DomainException('Cette commande a une facture active. Émettez un avoir avant de modifier son client ou ses lignes.');
+            }
+        }
         $values = [$data['client_id'], $data['assignee_resource_id'], $data['status'], $data['due_on'], $data['notes'], $data['deposit_expected'], $amount];
 
         if ($id === null) {
@@ -200,11 +215,13 @@ final class Sales
         } else {
             $this->query('UPDATE orders SET client_id=?,assignee_resource_id=?,status=?,due_on=?,notes=?,
                 deposit_expected=?,total_amount=?,updated_at=UTC_TIMESTAMP() WHERE id=?', [...$values, $id]);
-            $this->query('DELETE FROM order_items WHERE order_id = ?', [$id]);
+            if (!$lockedByInvoice) {
+                $this->query('DELETE FROM order_items WHERE order_id = ?', [$id]);
+            }
         }
 
         $insert = $this->db->prepare('INSERT INTO order_items (order_id,service_id,label,quantity,unit_price,sort_order) VALUES (?,?,?,?,?,?)');
-        foreach ($items as $position => $item) {
+        foreach ($lockedByInvoice ? [] : $items as $position => $item) {
             $insert->execute([$id, $item['service_id'], $item['label'], $item['quantity'], $item['unit_price'], $position]);
         }
         $data['items'] = $items;

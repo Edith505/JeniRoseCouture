@@ -136,3 +136,19 @@ $escape = static fn (mixed $value): string => htmlspecialchars((string) $value, 
         </dl>
     </section>
 <?php endif; ?>
+
+<?php if ($financeStats !== null): ?>
+    <?php $financeAmount = static fn (string $value): string => $escape(\App\Finance\InvoiceAmounts::label($value)); ?>
+    <section class="dashboard-panel dashboard-agenda">
+        <div class="catalogue-toolbar">
+            <h2>Finances</h2>
+            <a class="text-link" href="/index.php?route=admin-finances">Ouvrir le suivi financier</a>
+        </div>
+        <dl class="dashboard-counters dashboard-finance">
+            <div><dt>Facturé HT</dt><dd><span><?= $financeAmount($financeStats['invoiced_ht']) ?></span><small>Net des avoirs sur la période</small></dd></div>
+            <div><dt>Encaissements</dt><dd><span><?= $financeAmount($financeStats['received']) ?></span><small>Sommes reçues sur la période</small></dd></div>
+            <div><dt>Dépenses TTC</dt><dd><span><?= $financeAmount($financeStats['expenses']) ?></span><small>Sur la période</small></dd></div>
+            <div><dt>Reste à encaisser</dt><dd><span><?= $financeAmount($financeStats['outstanding']) ?></span><small>Factures ouvertes, toutes dates</small></dd></div>
+        </dl>
+    </section>
+<?php endif; ?>
